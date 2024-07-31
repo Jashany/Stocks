@@ -57,6 +57,7 @@ const Home = () => {
                 console.log(data);
                 dispatch(user(data));
                 localStorage.setItem('auth', JSON.stringify(data));
+                navigate('/buy')
             });
     };
 
@@ -73,6 +74,7 @@ const Home = () => {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+                
                 dispatch(user(data));
                 localStorage.setItem('auth', JSON.stringify(data));
             }

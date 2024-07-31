@@ -5,19 +5,17 @@ const StocksSale = () => {
   const [stocks, setStocks] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
 
-  useEffect(() => {
-    const fetchStocks = async () => {
-        console.log("fetching stocks");
-      const response = await fetch("http://localhost:5000/api/stocks/forsale");
-      const data = await response.json();
-      console.log(data);
-      setStocks(data.transactions);
-    };
-    fetchStocks();
-  }, []);
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
+    fetch('http://localhost:5000')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setStocks(data.transactions);
+        }
+    );  
+    
   };
 
   return (
@@ -33,8 +31,11 @@ const StocksSale = () => {
             <ul className={styles.stockList}>
               {stocks.map((stock) => (
                 <li key={stock._id} className={styles.stockItem}>
-                  <p>{stock.name}</p>
-                  <p>${stock.currentPrice}</p>
+                  <p>{stock?.stockId?.name}</p>
+                  <p>${stock?.price}</p>
+                  <p>
+                    Quantity: {stock.quantity} | Seller: {stock?.userId?.username}
+                  </p>
                 </li>
               ))}
             </ul>

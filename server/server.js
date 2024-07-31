@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 import bodyParser from "body-parser";
 import router from "./routes/Stock.routes.js";
-
+import Transaction from "./models/Transaction.model.js";
 
 const app = express();
 
@@ -13,6 +13,18 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use("/api", router);
+
+app.get('/', async (req, res) => {
+    try {
+        const transactions = await Transaction.find({ Status: "ForSale" }).populate("userId").populate("stockId");
+    
+        console.log(transactions);
+    
+        return res.status(200).json({ transactions });
+      } catch (error) {
+        return res.status(500).json({ message: error.message });
+      }
+});
 
 const PORT = process.env.PORT || 5000;
 
