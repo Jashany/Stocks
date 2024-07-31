@@ -5,17 +5,21 @@ import './App.css'
 import { Routes,Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './Store'
+import Home from './Pages/Home'
+import Stocks from './Pages/Stock'
+import InitialBuy from './Pages/IntitialBuy'
 
 function App() {
 
   return (
     <>
-      <Routes>
         <Provider store={store}>
+      <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Stocks" element={<Stocks />} />
-  </Provider>
+        <Route path="/Buy" element={<InitialBuy />} />
       </Routes>
+        </Provider>
     </>
   )
 }

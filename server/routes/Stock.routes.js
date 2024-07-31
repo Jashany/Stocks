@@ -1,4 +1,4 @@
-import { GetStock,BuyStockFromAnotherUser,BuyStocksAtMarketPrice,GetStocks,GetUser,GetStocksByUser,GetStocksForSale,PutStocksForSale,CreateUser,LoginUser } from "../controllers/Stock.controller.js";
+import { GetStock,BuyStockFromAnotherUser,BuyStocksAtMarketPrice,GetStocks,GetUser,GetStocksByUser,GetStocksForSale,PutStocksForSale,CreateUser,LoginUser,getUserData } from "../controllers/Stock.controller.js";
 
 import express from "express";
 
@@ -14,6 +14,7 @@ router.post("/stocks/sell", PutStocksForSale);
 router.post("/stocks/buy/:userId", BuyStockFromAnotherUser);
 router.post("/user", CreateUser);
 router.post("/user/login", LoginUser);
+router.get("/user/data/:userId", getUserData);
 
 
 export default router;

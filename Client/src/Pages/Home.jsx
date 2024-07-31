@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { user } from './authSlice';
+import { user } from '../Slices/authSlice';
+import styles from '../styles/Home.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const [registerForm, setRegisterForm] = useState({
-        name: '',
+        username: '',
         email: '',
         password: '',
         confirmPassword: ''
     });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const auth = JSON.parse(localStorage.getItem('auth'));
+        if (auth) {
+            navigate('/stocks');
+        }
+    }, []);
 
     const [loginForm, setLoginForm] = useState({
         email: '',
@@ -33,45 +44,53 @@ const Home = () => {
 
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
-        // Here you should add logic to send registerForm data to your backend.
         // Simulating backend response
-        const response = {
-            _id: 'user123',
-            phoneNumber: '1234567890',
-            name: registerForm.name,
-            role: 'user',
-            gender: 'male',
-            isSalon: false
-        };
-        dispatch(user(response));
+        fetch('http://localhost:5000/api/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registerForm)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                dispatch(user(data));
+                localStorage.setItem('auth', JSON.stringify(data));
+            });
     };
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        // Here you should add logic to send loginForm data to your backend.
         // Simulating backend response
-        const response = {
-            _id: 'user123',
-            phoneNumber: '1234567890',
-            name: 'John Doe',
-            role: 'user',
-            gender: 'male',
-            isSalon: false
-        };
-        dispatch(user(response));
+        fetch('http://localhost:5000/api/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginForm)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                dispatch(user(data));
+                localStorage.setItem('auth', JSON.stringify(data));
+            }
+            );
     };
 
     return (
-        <div>
-            <div>
-                <h1>Register</h1>
-                <form onSubmit={handleRegisterSubmit}>
+        <div className={styles.container}>
+            <div className={styles.formContainer}>
+                <h1 className={styles.heading}>Register</h1>
+                <form onSubmit={handleRegisterSubmit} className={styles.form}>
                     <input
                         type="text"
-                        name="name"
+                        name="username"
                         placeholder="Name"
-                        value={registerForm.name}
+                        value={registerForm.username}
                         onChange={handleRegisterChange}
+                        className={styles.input}
                     />
                     <input
                         type="email"
@@ -79,6 +98,7 @@ const Home = () => {
                         placeholder="Email"
                         value={registerForm.email}
                         onChange={handleRegisterChange}
+                        className={styles.input}
                     />
                     <input
                         type="password"
@@ -86,6 +106,7 @@ const Home = () => {
                         placeholder="Password"
                         value={registerForm.password}
                         onChange={handleRegisterChange}
+                        className={styles.input}
                     />
                     <input
                         type="password"
@@ -93,19 +114,21 @@ const Home = () => {
                         placeholder="Confirm Password"
                         value={registerForm.confirmPassword}
                         onChange={handleRegisterChange}
+                        className={styles.input}
                     />
-                    <button type="submit">Register</button>
+                    <button type="submit" className={styles.button}>Register</button>
                 </form>
             </div>
-            <div>
-                <h1>Login</h1>
-                <form onSubmit={handleLoginSubmit}>
+            <div className={styles.formContainer}>
+                <h1 className={styles.heading}>Login</h1>
+                <form onSubmit={handleLoginSubmit} className={styles.form}>
                     <input
                         type="email"
                         name="email"
                         placeholder="Email"
                         value={loginForm.email}
                         onChange={handleLoginChange}
+                        className={styles.input}
                     />
                     <input
                         type="password"
@@ -113,12 +136,12 @@ const Home = () => {
                         placeholder="Password"
                         value={loginForm.password}
                         onChange={handleLoginChange}
+                        className={styles.input}
                     />
-                    <button type="submit">Login</button>
+                    <button type="submit" className={styles.button}>Login</button>
                 </form>
             </div>
         </div>
     );
 };
-
 export default Home;

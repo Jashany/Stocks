@@ -245,7 +245,34 @@ const LoginUser = async (req, res) => {
     }
 }
 
-export { BuyStocksAtMarketPrice, PutStocksForSale, BuyStockFromAnotherUser, GetStocks, GetStock, GetStocksForSale, GetStocksByUser, GetUser,CreateUser,LoginUser };
+const addDummyStocks = async () => {
+    try {
+        await Stock.create({ name: "Apple", currentPrice: 100 });
+        await Stock.create({ name: "Microsoft", currentPrice: 200 });
+        await Stock.create({ name: "Google", currentPrice: 300 });
+        await Stock.create({ name: "Facebook", currentPrice: 400 });
+        await Stock.create({ name: "Amazon", currentPrice: 500 });
+        await Stock.create({ name: "Tesla", currentPrice: 600 });
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const getUserData = async (req,res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId).populate("stocks.stockId");
+
+        return res.status(200).json({ user });
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export { BuyStocksAtMarketPrice, PutStocksForSale, BuyStockFromAnotherUser, GetStocks, GetStock, GetStocksForSale, GetStocksByUser, GetUser,CreateUser,LoginUser,getUserData };
 
 
 
